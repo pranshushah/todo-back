@@ -4,7 +4,7 @@ interface userAttr {
   email: string;
   name: string;
   imageURL: string;
-  facebookId?: string;
+  twitterId?: string;
 }
 // this will be type of document when create with new User();
 export interface userDocInterface extends Document, userAttr {}
@@ -41,7 +41,7 @@ const userSchema = new Schema(
     googleId: {
       type: String,
     },
-    facebookId: {
+    twitterId: {
       type: String,
     },
   },
@@ -56,12 +56,12 @@ const userSchema = new Schema(
   },
 );
 
-// googleId XOR facebookId should be 1;
+// googleId XOR twitterId should be 1;
 userSchema.pre('validate', function (next) {
-  if (this.get('googleId') || this.get('facebookId')) {
+  if (this.get('googleId') || this.get('twitterId')) {
     next();
   } else {
-    next(new Error('you should provide either googleid and facebookid'));
+    next(new Error('you should provide either googleid or twitterid'));
   }
 });
 

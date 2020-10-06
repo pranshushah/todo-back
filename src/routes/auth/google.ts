@@ -10,7 +10,13 @@ router.get(
 );
 
 // passing code to google and then it will call callback function passed in new GoogleStrategy
-router.get('/api/auth/google/callback', passport.authenticate('google'));
+router.get(
+  '/api/auth/google/callback',
+  passport.authenticate('google', {
+    failureRedirect: '/fail',
+    successRedirect: '/done',
+  }),
+);
 
 router.get('/api/current_user', (req: Request, res: Response) => {
   console.log(req.user);

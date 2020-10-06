@@ -10,7 +10,10 @@ exports.googleLogin = router;
 // getting code for data
 router.get('/api/auth/google', passport_1.default.authenticate('google', { scope: ['profile', 'email'] }));
 // passing code to google and then it will call callback function passed in new GoogleStrategy
-router.get('/api/auth/google/callback', passport_1.default.authenticate('google'));
+router.get('/api/auth/google/callback', passport_1.default.authenticate('google', {
+    failureRedirect: '/fail',
+    successRedirect: '/done',
+}));
 router.get('/api/current_user', function (req, res) {
     console.log(req.user);
     res.send(req.user);

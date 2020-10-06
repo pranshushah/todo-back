@@ -59,11 +59,11 @@ function googleDetailsCallback(accessToken, refreshToken, profile, done) {
                 case 2:
                     updatedExistingUser = _a.sent();
                     done(undefined, updatedExistingUser);
-                    _a.label = 3;
+                    return [2 /*return*/];
                 case 3:
                     //user has already signup so we will continue
                     done(undefined, existingUser);
-                    return [3 /*break*/, 6];
+                    return [2 /*return*/];
                 case 4:
                     user = User_1.User.build({
                         googleId: profile.id,
@@ -75,8 +75,7 @@ function googleDetailsCallback(accessToken, refreshToken, profile, done) {
                 case 5:
                     newUser = _a.sent();
                     done(undefined, newUser);
-                    _a.label = 6;
-                case 6: return [2 /*return*/];
+                    return [2 /*return*/];
             }
         });
     });

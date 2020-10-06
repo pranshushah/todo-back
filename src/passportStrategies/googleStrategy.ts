@@ -22,9 +22,11 @@ async function googleDetailsCallback(
         { new: true },
       );
       done(undefined, updatedExistingUser);
+      return;
     }
     //user has already signup so we will continue
     done(undefined, existingUser);
+    return;
   } else {
     // user doesnot exist we will signup
     const user = User.build({
@@ -35,6 +37,7 @@ async function googleDetailsCallback(
     });
     const newUser = await user.save();
     done(undefined, newUser);
+    return;
   }
 }
 

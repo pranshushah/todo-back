@@ -25,7 +25,7 @@ var userSchema = new mongoose_1.Schema({
     googleId: {
         type: String,
     },
-    facebookId: {
+    twitterId: {
         type: String,
     },
 }, {
@@ -37,13 +37,13 @@ var userSchema = new mongoose_1.Schema({
         },
     },
 });
-// googleId XOR facebookId should be 1;
+// googleId XOR twitterId should be 1;
 userSchema.pre('validate', function (next) {
-    if (this.get('googleId') || this.get('facebookId')) {
+    if (this.get('googleId') || this.get('twitterId')) {
         next();
     }
     else {
-        next(new Error('you should provide either googleid and facebookid'));
+        next(new Error('you should provide either googleid or twitterid'));
     }
 });
 // this created because we can type check with new User({});

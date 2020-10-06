@@ -40,21 +40,50 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var keys_1 = require("../config/keys");
-var passport_facebook_1 = __importDefault(require("passport-facebook"));
+var User_1 = require("../models/User");
+var passport_twitter_1 = __importDefault(require("passport-twitter"));
 var passport_1 = __importDefault(require("passport"));
-var FacebookStrategy = passport_facebook_1.default.Strategy;
-//callbackfunction for FacebookStrategy
-function googleDetailsCallback(accessToken, refreshToken, profile, done) {
+var TwitterStrategy = passport_twitter_1.default.Strategy;
+//callbackfunction for TwitterStrategy
+function twitterDetailsCallback(accessToken, refreshToken, profile, done) {
     return __awaiter(this, void 0, void 0, function () {
+        var existingUser, updatedExistingUser, user, newUser;
         return __generator(this, function (_a) {
-            console.log(profile);
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, User_1.User.findOne({ email: profile._json.email })];
+                case 1:
+                    existingUser = _a.sent();
+                    if (!existingUser) return [3 /*break*/, 4];
+                    if (!!existingUser.twitterId) return [3 /*break*/, 3];
+                    return [4 /*yield*/, User_1.User.findOneAndUpdate({ email: existingUser.email }, { twitterId: profile._json.id_str }, { new: true })];
+                case 2:
+                    updatedExistingUser = _a.sent();
+                    done(undefined, updatedExistingUser);
+                    return [2 /*return*/];
+                case 3:
+                    //user has already signup so we will continue
+                    done(undefined, existingUser);
+                    return [2 /*return*/];
+                case 4:
+                    user = User_1.User.build({
+                        twitterId: profile._json.id_str,
+                        name: 'pranshushah1',
+                        email: profile._json.email,
+                        imageURL: profile._json.profile_image_url_https,
+                    });
+                    return [4 /*yield*/, user.save()];
+                case 5:
+                    newUser = _a.sent();
+                    done(undefined, newUser);
+                    return [2 /*return*/];
+            }
         });
     });
 }
 // creating google-passport strategy
-passport_1.default.use(new FacebookStrategy({
-    clientID: keys_1.facebookAppId,
-    clientSecret: keys_1.facbookSecret,
-    callbackURL: '/api/auth/facebook/callback',
-}, googleDetailsCallback));
+passport_1.default.use(new TwitterStrategy({
+    consumerKey: keys_1.twitterAppId,
+    consumerSecret: keys_1.twitterSecret,
+    includeEmail: true,
+    callbackURL: '/api/auth/twitter/callback',
+}, twitterDetailsCallback));
