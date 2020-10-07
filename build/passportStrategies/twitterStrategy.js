@@ -52,9 +52,7 @@ function twitterDetailsCallback(accessToken, refreshToken, profile, done) {
         var existingUser, updatedExistingUser, user, newUser;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    console.log(profile);
-                    return [4 /*yield*/, User_1.User.findOne({ email: profile._json.email })];
+                case 0: return [4 /*yield*/, User_1.User.findOne({ email: profile._json.email })];
                 case 1:
                     existingUser = _a.sent();
                     if (!existingUser) return [3 /*break*/, 4];

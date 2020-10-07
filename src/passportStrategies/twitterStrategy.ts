@@ -14,7 +14,6 @@ async function twitterDetailsCallback(
   profile: TwitterPassport.Profile,
   done: Function,
 ) {
-  console.log(profile);
   const existingUser = await User.findOne({ email: profile._json.email });
   if (existingUser) {
     // if given email is used when signing with google we will just add twitterid into the document

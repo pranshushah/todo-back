@@ -7,6 +7,11 @@ const router = express.Router();
 router.get(
   '/api/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] }),
+  (req: Request, res: Response) => {
+    if (process.env.NODE_ENV === 'test') {
+      res.status(200).send(req.user); // for jest testing will not called in dev or prdo env
+    }
+  },
 );
 
 // passing code to google and then it will call callback function passed in new GoogleStrategy
@@ -17,14 +22,5 @@ router.get(
     successRedirect: '/done',
   }),
 );
-
-router.get('/api/current_user', (req: Request, res: Response) => {
-  res.send(req.user);
-});
-
-router.get('/api/logout', (req: Request, res: Response) => {
-  req.logout();
-  res.send('done');
-});
 
 export { router as googleLogin };

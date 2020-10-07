@@ -1,5 +1,7 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
+import '../passportStrategies/twitterStrategy';
+import '../passportStrategies/googleStrategy'; // importing google strategy
 
 let mongo: MongoMemoryServer;
 beforeAll(async () => {

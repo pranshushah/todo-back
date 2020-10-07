@@ -39,63 +39,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongodb_memory_server_1 = require("mongodb-memory-server");
-var mongoose_1 = __importDefault(require("mongoose"));
-require("../passportStrategies/twitterStrategy");
-require("../passportStrategies/googleStrategy"); // importing google strategy
-var mongo;
-beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
-    var mongoUri;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                mongo = new mongodb_memory_server_1.MongoMemoryServer();
-                return [4 /*yield*/, mongo.getUri()];
-            case 1:
-                mongoUri = _a.sent();
-                return [4 /*yield*/, mongoose_1.default.connect(mongoUri, {
-                        useNewUrlParser: true,
-                        useUnifiedTopology: true,
-                    })];
-            case 2:
-                _a.sent();
-                return [2 /*return*/];
-        }
+var app_1 = require("../app");
+var supertest_1 = __importDefault(require("supertest"));
+function twitterAuthentication() {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, cookie;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, supertest_1.default(app_1.app).get('/api/auth/twitter').expect(200)];
+                case 1:
+                    response = _a.sent();
+                    cookie = response.get('Set-Cookie');
+                    return [2 /*return*/, cookie];
+            }
+        });
     });
-}); });
-beforeEach(function () { return __awaiter(void 0, void 0, void 0, function () {
-    var collections, _i, collections_1, collection;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, mongoose_1.default.connection.db.collections()];
-            case 1:
-                collections = _a.sent();
-                _i = 0, collections_1 = collections;
-                _a.label = 2;
-            case 2:
-                if (!(_i < collections_1.length)) return [3 /*break*/, 5];
-                collection = collections_1[_i];
-                return [4 /*yield*/, collection.deleteMany({})];
-            case 3:
-                _a.sent();
-                _a.label = 4;
-            case 4:
-                _i++;
-                return [3 /*break*/, 2];
-            case 5: return [2 /*return*/];
-        }
-    });
-}); });
-afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, mongo.stop()];
-            case 1:
-                _a.sent();
-                return [4 /*yield*/, mongoose_1.default.connection.close()];
-            case 2:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); });
+}
+exports.twitterAuthentication = twitterAuthentication;

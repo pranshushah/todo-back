@@ -37,7 +37,6 @@ async function googleDetailsCallback(
       imageURL: profile._json.picture as string,
     });
     const newUser = await user.save();
-    console.log(3);
     done(undefined, newUser);
     return;
   }
@@ -48,7 +47,7 @@ function envStrategy() {
   if (process.env.NODE_ENV === 'test') {
     strategy = new MockStrategy(
       { name: 'google', user: googleMockProfile },
-      // @ts-ignore  (doing this because of user)
+      // @ts-ignore  (doing this because of profile arg)
       googleDetailsCallback,
     );
   } else {
@@ -74,6 +73,5 @@ passport.serializeUser((user: userDocInterface, done) => {
 // getting user from cookie
 passport.deserializeUser(async (id: string, done) => {
   const user = await User.findById(id);
-  console.log(user);
   done(undefined, user?.toJSON());
 });

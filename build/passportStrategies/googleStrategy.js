@@ -76,7 +76,6 @@ function googleDetailsCallback(accessToken, refreshToken, profile, done) {
                     return [4 /*yield*/, user.save()];
                 case 5:
                     newUser = _a.sent();
-                    console.log(3);
                     done(undefined, newUser);
                     return [2 /*return*/];
             }
@@ -87,7 +86,7 @@ function envStrategy() {
     var strategy;
     if (process.env.NODE_ENV === 'test') {
         strategy = new mockStrategy_1.default({ name: 'google', user: googleMockProfile_1.googleMockProfile }, 
-        // @ts-ignore  (doing this because of user)
+        // @ts-ignore  (doing this because of profile arg)
         googleDetailsCallback);
     }
     else {
@@ -113,7 +112,6 @@ passport_1.default.deserializeUser(function (id, done) { return __awaiter(void 0
             case 0: return [4 /*yield*/, User_1.User.findById(id)];
             case 1:
                 user = _b.sent();
-                console.log(user);
                 done(undefined, (_a = user) === null || _a === void 0 ? void 0 : _a.toJSON());
                 return [2 /*return*/];
         }

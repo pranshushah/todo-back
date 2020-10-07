@@ -4,6 +4,7 @@ import cookieSession from 'cookie-session';
 import { googleLogin } from './routes/auth/google';
 import { twitterLogin } from './routes/auth/twitter';
 import { cookieKey } from './config/keys';
+import { currentUser_logout } from './routes/auth/currentUser_logout';
 const app = express();
 app.use(express.json());
 app.use(
@@ -16,6 +17,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(googleLogin);
 app.use(twitterLogin);
+app.use(currentUser_logout);
 app.get('/fail', (req, res) => {
   res.send('sorry');
 });

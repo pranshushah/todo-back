@@ -8,16 +8,13 @@ var express_1 = __importDefault(require("express"));
 var router = express_1.default.Router();
 exports.googleLogin = router;
 // getting code for data
-router.get('/api/auth/google', passport_1.default.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/api/auth/google', passport_1.default.authenticate('google', { scope: ['profile', 'email'] }), function (req, res) {
+    if (process.env.NODE_ENV === 'test') {
+        res.status(200).send(req.user); // for jest testing will not called in dev or prdo env
+    }
+});
 // passing code to google and then it will call callback function passed in new GoogleStrategy
 router.get('/api/auth/google/callback', passport_1.default.authenticate('google', {
     failureRedirect: '/fail',
     successRedirect: '/done',
 }));
-router.get('/api/current_user', function (req, res) {
-    res.send(req.user);
-});
-router.get('/api/logout', function (req, res) {
-    req.logout();
-    res.send('done');
-});
