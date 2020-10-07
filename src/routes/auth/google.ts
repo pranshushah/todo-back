@@ -19,7 +19,6 @@ router.get(
 );
 
 router.get('/api/current_user', (req: Request, res: Response) => {
-  console.log(req.user);
   res.send(req.user);
 });
 

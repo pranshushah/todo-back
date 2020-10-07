@@ -15,7 +15,6 @@ router.get('/api/auth/google/callback', passport_1.default.authenticate('google'
     successRedirect: '/done',
 }));
 router.get('/api/current_user', function (req, res) {
-    console.log(req.user);
     res.send(req.user);
 });
 router.get('/api/logout', function (req, res) {
