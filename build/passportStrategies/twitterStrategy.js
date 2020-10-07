@@ -43,6 +43,8 @@ var keys_1 = require("../config/keys");
 var User_1 = require("../models/User");
 var passport_twitter_1 = __importDefault(require("passport-twitter"));
 var passport_1 = __importDefault(require("passport"));
+var mockStrategy_1 = __importDefault(require("../config/mocks/mockStrategy"));
+var twitterMockProfile_1 = require("../config/mocks/twitterMockProfile");
 var TwitterStrategy = passport_twitter_1.default.Strategy;
 //callbackfunction for TwitterStrategy
 function twitterDetailsCallback(accessToken, refreshToken, profile, done) {
@@ -50,7 +52,9 @@ function twitterDetailsCallback(accessToken, refreshToken, profile, done) {
         var existingUser, updatedExistingUser, user, newUser;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, User_1.User.findOne({ email: profile._json.email })];
+                case 0:
+                    console.log(profile);
+                    return [4 /*yield*/, User_1.User.findOne({ email: profile._json.email })];
                 case 1:
                     existingUser = _a.sent();
                     if (!existingUser) return [3 /*break*/, 4];
@@ -67,7 +71,7 @@ function twitterDetailsCallback(accessToken, refreshToken, profile, done) {
                 case 4:
                     user = User_1.User.build({
                         twitterId: profile._json.id_str,
-                        name: 'pranshushah1',
+                        name: profile._json.screen_name,
                         email: profile._json.email,
                         imageURL: profile._json.profile_image_url_https,
                     });
@@ -80,10 +84,22 @@ function twitterDetailsCallback(accessToken, refreshToken, profile, done) {
         });
     });
 }
+function envStrategy() {
+    var strategy;
+    if (process.env.NODE_ENV === 'test') {
+        strategy = new mockStrategy_1.default({ name: 'twitter', user: twitterMockProfile_1.twitterMockProfile }, 
+        // @ts-ignore  (doing this because of user)
+        twitterDetailsCallback);
+    }
+    else {
+        strategy = new TwitterStrategy({
+            consumerKey: keys_1.twitterAppId,
+            consumerSecret: keys_1.twitterSecret,
+            includeEmail: true,
+            callbackURL: '/api/auth/twitter/callback',
+        }, twitterDetailsCallback);
+    }
+    return strategy;
+}
 // creating google-passport strategy
-passport_1.default.use(new TwitterStrategy({
-    consumerKey: keys_1.twitterAppId,
-    consumerSecret: keys_1.twitterSecret,
-    includeEmail: true,
-    callbackURL: '/api/auth/twitter/callback',
-}, twitterDetailsCallback));
+passport_1.default.use(envStrategy());

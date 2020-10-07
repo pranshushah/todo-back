@@ -2,7 +2,8 @@ import { googleClientId, googleClientSecret } from '../config/keys';
 import { User, userDocInterface } from '../models/User';
 import GooglePassport from 'passport-google-oauth20';
 import passport from 'passport';
-
+import MockStrategy from '../config/mocks/mockStrategy';
+import { googleMockProfile } from '../config/mocks/googleMockProfile';
 const GoogleStrategy = GooglePassport.Strategy;
 
 //callbackfunction for GoogleStrategy
@@ -36,25 +37,36 @@ async function googleDetailsCallback(
       imageURL: profile._json.picture as string,
     });
     const newUser = await user.save();
+    console.log(3);
     done(undefined, newUser);
     return;
   }
 }
 
-// creating google-passport strategy
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: googleClientId,
-      clientSecret: googleClientSecret,
-      callbackURL: '/api/auth/google/callback',
-    },
-    googleDetailsCallback,
-  ),
-);
+function envStrategy() {
+  let strategy;
+  if (process.env.NODE_ENV === 'test') {
+    strategy = new MockStrategy(
+      { name: 'google', user: googleMockProfile },
+      // @ts-ignore  (doing this because of user)
+      googleDetailsCallback,
+    );
+  } else {
+    strategy = new GoogleStrategy(
+      {
+        clientID: googleClientId,
+        clientSecret: googleClientSecret,
+        callbackURL: '/api/auth/google/callback',
+      },
+      googleDetailsCallback,
+    );
+  }
+  return strategy;
+}
+
+passport.use(envStrategy());
 
 //this function will run after googleDetailsCallback
-
 passport.serializeUser((user: userDocInterface, done) => {
   done(undefined, user.id);
 });
@@ -62,5 +74,6 @@ passport.serializeUser((user: userDocInterface, done) => {
 // getting user from cookie
 passport.deserializeUser(async (id: string, done) => {
   const user = await User.findById(id);
+  console.log(user);
   done(undefined, user?.toJSON());
 });

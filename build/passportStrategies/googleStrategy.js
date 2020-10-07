@@ -43,6 +43,8 @@ var keys_1 = require("../config/keys");
 var User_1 = require("../models/User");
 var passport_google_oauth20_1 = __importDefault(require("passport-google-oauth20"));
 var passport_1 = __importDefault(require("passport"));
+var mockStrategy_1 = __importDefault(require("../config/mocks/mockStrategy"));
+var googleMockProfile_1 = require("../config/mocks/googleMockProfile");
 var GoogleStrategy = passport_google_oauth20_1.default.Strategy;
 //callbackfunction for GoogleStrategy
 function googleDetailsCallback(accessToken, refreshToken, profile, done) {
@@ -74,18 +76,30 @@ function googleDetailsCallback(accessToken, refreshToken, profile, done) {
                     return [4 /*yield*/, user.save()];
                 case 5:
                     newUser = _a.sent();
+                    console.log(3);
                     done(undefined, newUser);
                     return [2 /*return*/];
             }
         });
     });
 }
-// creating google-passport strategy
-passport_1.default.use(new GoogleStrategy({
-    clientID: keys_1.googleClientId,
-    clientSecret: keys_1.googleClientSecret,
-    callbackURL: '/api/auth/google/callback',
-}, googleDetailsCallback));
+function envStrategy() {
+    var strategy;
+    if (process.env.NODE_ENV === 'test') {
+        strategy = new mockStrategy_1.default({ name: 'google', user: googleMockProfile_1.googleMockProfile }, 
+        // @ts-ignore  (doing this because of user)
+        googleDetailsCallback);
+    }
+    else {
+        strategy = new GoogleStrategy({
+            clientID: keys_1.googleClientId,
+            clientSecret: keys_1.googleClientSecret,
+            callbackURL: '/api/auth/google/callback',
+        }, googleDetailsCallback);
+    }
+    return strategy;
+}
+passport_1.default.use(envStrategy());
 //this function will run after googleDetailsCallback
 passport_1.default.serializeUser(function (user, done) {
     done(undefined, user.id);
@@ -99,6 +113,7 @@ passport_1.default.deserializeUser(function (id, done) { return __awaiter(void 0
             case 0: return [4 /*yield*/, User_1.User.findById(id)];
             case 1:
                 user = _b.sent();
+                console.log(user);
                 done(undefined, (_a = user) === null || _a === void 0 ? void 0 : _a.toJSON());
                 return [2 /*return*/];
         }
