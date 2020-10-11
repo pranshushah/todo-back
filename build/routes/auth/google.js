@@ -15,6 +15,6 @@ router.get('/api/auth/google', passport_1.default.authenticate('google', { scope
 });
 // passing code to google and then it will call callback function passed in new GoogleStrategy
 router.get('/api/auth/google/callback', passport_1.default.authenticate('google', {
-    failureRedirect: '/fail',
-    successRedirect: '/done',
+    failureRedirect: 'http://localhost:3000/',
+    successRedirect: 'http://localhost:3000/',
 }));
