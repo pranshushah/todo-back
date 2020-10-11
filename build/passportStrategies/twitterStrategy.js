@@ -45,21 +45,24 @@ var passport_twitter_1 = __importDefault(require("passport-twitter"));
 var passport_1 = __importDefault(require("passport"));
 var mockStrategy_1 = __importDefault(require("../config/mocks/mockStrategy"));
 var twitterMockProfile_1 = require("../config/mocks/twitterMockProfile");
+var database_connection_1 = require("../errors/database_connection");
 var TwitterStrategy = passport_twitter_1.default.Strategy;
 //callbackfunction for TwitterStrategy
 function twitterDetailsCallback(accessToken, refreshToken, profile, done) {
     return __awaiter(this, void 0, void 0, function () {
-        var existingUser, updatedExistingUser, user, newUser;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, User_1.User.findOne({ email: profile._json.email })];
+        var existingUser, updatedExistingUser, user, newUser, _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 7, , 8]);
+                    return [4 /*yield*/, User_1.User.findOne({ email: profile._json.email })];
                 case 1:
-                    existingUser = _a.sent();
+                    existingUser = _b.sent();
                     if (!existingUser) return [3 /*break*/, 4];
                     if (!!existingUser.twitterId) return [3 /*break*/, 3];
                     return [4 /*yield*/, User_1.User.findOneAndUpdate({ email: existingUser.email }, { twitterId: profile._json.id_str }, { new: true })];
                 case 2:
-                    updatedExistingUser = _a.sent();
+                    updatedExistingUser = _b.sent();
                     done(undefined, updatedExistingUser);
                     return [2 /*return*/];
                 case 3:
@@ -75,9 +78,14 @@ function twitterDetailsCallback(accessToken, refreshToken, profile, done) {
                     });
                     return [4 /*yield*/, user.save()];
                 case 5:
-                    newUser = _a.sent();
+                    newUser = _b.sent();
                     done(undefined, newUser);
                     return [2 /*return*/];
+                case 6: return [3 /*break*/, 8];
+                case 7:
+                    _a = _b.sent();
+                    throw new database_connection_1.DatabaseConnectionError();
+                case 8: return [2 /*return*/];
             }
         });
     });

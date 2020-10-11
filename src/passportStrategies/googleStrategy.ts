@@ -2,6 +2,7 @@ import { googleClientId, googleClientSecret } from '../config/keys';
 import { User, userDocInterface } from '../models/User';
 import GooglePassport from 'passport-google-oauth20';
 import passport from 'passport';
+import { DatabaseConnectionError } from '../errors/database_connection';
 import MockStrategy from '../config/mocks/mockStrategy';
 import { googleMockProfile } from '../config/mocks/googleMockProfile';
 const GoogleStrategy = GooglePassport.Strategy;
@@ -13,32 +14,36 @@ async function googleDetailsCallback(
   profile: GooglePassport.Profile,
   done: GooglePassport.VerifyCallback,
 ) {
-  const existingUser = await User.findOne({ email: profile._json.email });
-  if (existingUser) {
-    // if given email is used when signing with facebook we will just add googleId into the document
-    if (!existingUser.googleId) {
-      const updatedExistingUser = await User.findOneAndUpdate(
-        { email: existingUser.email },
-        { googleId: profile.id },
-        { new: true },
-      );
-      done(undefined, updatedExistingUser);
+  try {
+    const existingUser = await User.findOne({ email: profile._json.email });
+    if (existingUser) {
+      // if given email is used when signing with facebook we will just add googleId into the document
+      if (!existingUser.googleId) {
+        const updatedExistingUser = await User.findOneAndUpdate(
+          { email: existingUser.email },
+          { googleId: profile.id },
+          { new: true },
+        );
+        done(undefined, updatedExistingUser);
+        return;
+      }
+      //user has already signup so we will continue
+      done(undefined, existingUser);
+      return;
+    } else {
+      // user doesnot exist we will signup
+      const user = User.build({
+        googleId: profile.id,
+        name: profile.displayName,
+        email: profile._json.email as string,
+        imageURL: profile._json.picture as string,
+      });
+      const newUser = await user.save();
+      done(undefined, newUser);
       return;
     }
-    //user has already signup so we will continue
-    done(undefined, existingUser);
-    return;
-  } else {
-    // user doesnot exist we will signup
-    const user = User.build({
-      googleId: profile.id,
-      name: profile.displayName,
-      email: profile._json.email as string,
-      imageURL: profile._json.picture as string,
-    });
-    const newUser = await user.save();
-    done(undefined, newUser);
-    return;
+  } catch {
+    throw new DatabaseConnectionError();
   }
 }
 
@@ -70,7 +75,7 @@ passport.serializeUser((user: userDocInterface, done) => {
   done(undefined, user.id);
 });
 
-// getting user from cookie
+// getting user from cookie and add will to the req.user
 passport.deserializeUser(async (id: string, done) => {
   const user = await User.findById(id);
   done(undefined, user?.toJSON());

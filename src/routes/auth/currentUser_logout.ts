@@ -7,9 +7,9 @@ router.get('/api/current_user', (req: Request, res: Response) => {
 });
 
 router.get('/api/logout', (req: Request, res: Response) => {
-  req.logOut();
-  req.session = null; // from docs of cookie-session this will destroy the session
-  res.status(200).send({});
+  req.logout();
+  req.session = null;
+  res.status(200).send('done');
 });
 
 export { router as currentUser_logout };

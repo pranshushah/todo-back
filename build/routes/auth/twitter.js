@@ -15,6 +15,6 @@ router.get('/api/auth/twitter', passport_1.default.authenticate('twitter'), func
 });
 // passing code to google and then it will call callback function passed in new twitterStrategy
 router.get('/api/auth/twitter/callback', passport_1.default.authenticate('twitter', {
-    failureRedirect: '/fail',
-    successRedirect: '/done',
+    failureRedirect: 'http://localhost:3000/',
+    successRedirect: 'http://localhost:3000/',
 }));

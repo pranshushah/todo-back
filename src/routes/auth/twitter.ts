@@ -18,8 +18,8 @@ router.get(
 router.get(
   '/api/auth/twitter/callback',
   passport.authenticate('twitter', {
-    failureRedirect: '/fail',
-    successRedirect: '/done',
+    failureRedirect: 'http://localhost:3000/',
+    successRedirect: 'http://localhost:3000/',
   }),
 );
 

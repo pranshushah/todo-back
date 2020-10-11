@@ -4,6 +4,8 @@ import cookieSession from 'cookie-session';
 import { googleLogin } from './routes/auth/google';
 import { twitterLogin } from './routes/auth/twitter';
 import { cookieKey } from './config/keys';
+import { NoRouteError } from './errors/no_routes_error';
+import { errorHandler } from './middleware/errorHandler';
 import { currentUser_logout } from './routes/auth/currentUser_logout';
 const app = express();
 app.use(express.json());
@@ -18,12 +20,11 @@ app.use(passport.session());
 app.use(googleLogin);
 app.use(twitterLogin);
 app.use(currentUser_logout);
-app.get('/fail', (req, res) => {
-  res.send('sorry');
+
+app.all('*', () => {
+  throw new NoRouteError();
 });
 
-app.get('/done', (req, res) => {
-  res.send('done');
-});
+app.use(errorHandler);
 
 export { app };

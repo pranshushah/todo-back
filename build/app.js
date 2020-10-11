@@ -9,6 +9,8 @@ var cookie_session_1 = __importDefault(require("cookie-session"));
 var google_1 = require("./routes/auth/google");
 var twitter_1 = require("./routes/auth/twitter");
 var keys_1 = require("./config/keys");
+var no_routes_error_1 = require("./errors/no_routes_error");
+var errorHandler_1 = require("./middleware/errorHandler");
 var currentUser_logout_1 = require("./routes/auth/currentUser_logout");
 var app = express_1.default();
 exports.app = app;
@@ -22,9 +24,7 @@ app.use(passport_1.default.session());
 app.use(google_1.googleLogin);
 app.use(twitter_1.twitterLogin);
 app.use(currentUser_logout_1.currentUser_logout);
-app.get('/fail', function (req, res) {
-    res.send('sorry');
+app.all('*', function () {
+    throw new no_routes_error_1.NoRouteError();
 });
-app.get('/done', function (req, res) {
-    res.send('done');
-});
+app.use(errorHandler_1.errorHandler);
