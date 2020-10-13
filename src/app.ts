@@ -3,8 +3,11 @@ import passport from 'passport';
 import cookieSession from 'cookie-session';
 import { googleLogin } from './routes/auth/google';
 import { twitterLogin } from './routes/auth/twitter';
+import { createProjectRoute } from './routes/project/createProject';
+import { editProjectRoute } from './routes/project/editProject';
+import { deleteProjectRoute } from './routes/project/deleteProject';
 import { cookieKey } from './config/keys';
-import { NoRouteError } from './errors/no_routes_error';
+import { BadRequestError } from './errors/bad_request';
 import { errorHandler } from './middleware/errorHandler';
 import { currentUser_logout } from './routes/auth/currentUser_logout';
 const app = express();
@@ -20,9 +23,11 @@ app.use(passport.session());
 app.use(googleLogin);
 app.use(twitterLogin);
 app.use(currentUser_logout);
-
+app.use(createProjectRoute);
+app.use(deleteProjectRoute);
+app.use(editProjectRoute);
 app.all('*', () => {
-  throw new NoRouteError();
+  throw new BadRequestError('there is no such route', 404);
 });
 
 app.use(errorHandler);

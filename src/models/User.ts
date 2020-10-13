@@ -50,6 +50,7 @@ const userSchema = new Schema(
     toJSON: {
       versionKey: false,
       transform(doc: userDocInterface, ret) {
+        ret.id = ret._id;
         delete ret._id;
       },
     },

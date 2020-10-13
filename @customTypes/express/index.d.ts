@@ -1,6 +1,6 @@
-import { userDocInterface } from '../../src/models/User';
+import { userInfo } from '../../src/utils/types';
 declare global {
   namespace Express {
-    interface User extends userDocInterface {}
+    interface User extends userInfo {}
   }
 }

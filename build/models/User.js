@@ -33,6 +33,7 @@ var userSchema = new mongoose_1.Schema({
     toJSON: {
         versionKey: false,
         transform: function (doc, ret) {
+            ret.id = ret._id;
             delete ret._id;
         },
     },
