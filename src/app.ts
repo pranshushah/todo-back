@@ -18,6 +18,7 @@ app.use(
     keys: [cookieKey],
   }),
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(googleLogin);
@@ -29,7 +30,5 @@ app.use(editProjectRoute);
 app.all('*', () => {
   throw new BadRequestError('there is no such route', 404);
 });
-
 app.use(errorHandler);
-
 export { app };

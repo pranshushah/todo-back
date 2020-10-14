@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { authChecking } from '../../middleware/requireAuth';
 import { Project } from '../../models/Project';
 import { BadRequestError } from '../../errors/bad_request';
@@ -20,6 +20,7 @@ router.delete(
   async (
     req: Request<any, projectResBody, deleteProjectReqBody>,
     res: Response<projectResBody>,
+    next: NextFunction,
   ) => {
     const givenUserObjectId = Types.ObjectId(req.user?.id)!;
     // check if  given project exist.
@@ -28,10 +29,10 @@ router.delete(
       userId: givenUserObjectId,
     });
     if (!deletedProject) {
-      throw new BadRequestError(
-        'can not update the project that does not exist',
-        400,
+      next(
+        new BadRequestError('cannot delete project that does not exist', 400),
       );
+      return;
     }
     res.status(200).send(deletedProject?.toJSON());
   },

@@ -37,10 +37,8 @@
     ]
   },
   "scripts": {
-    "start:build": "tsc -w",
-    "start:run": "nodemon build/index.js",
-    "start": "concurrently yarn:start:*",
-    "test": "jest --watchAll --no-cache"
+    "start": "ts-node-dev --poll src/index.ts",
+    "test": "jest --runInBand --detectOpenHandles  --watchAll"
   },
   "devDependencies": {
     "@types/jest": "^26.0.14",

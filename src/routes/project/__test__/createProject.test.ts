@@ -47,10 +47,7 @@ it('should throw error if project name is empty string', async () => {
   expect(res.body.errors[0].message).toEqual('project name can not be empty');
 });
 
-/*
-
-commenting this because of memmory leak error
-
+// commenting this because of memmory leak error
 it('should throw error if project name already created by user', async () => {
   const cookie = await googleAuthentication();
   await request(app)
@@ -61,7 +58,5 @@ it('should throw error if project name already created by user', async () => {
     .post('/api/project/new')
     .send({ projectName: 'project' })
     .set('Cookie', cookie);
-
   expect(res.body.errors[0].message).toEqual('project name already exist');
 });
-*/

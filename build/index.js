@@ -51,7 +51,7 @@ var app_1 = require("./app");
                     return [4 /*yield*/, mongoose_1.connect(keys_1.mongoURI, {
                             useNewUrlParser: true,
                             useUnifiedTopology: true,
-                            useCreateIndex: true,
+                            useFindAndModify: false,
                         })];
                 case 1:
                     _a.sent();

@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { body } from 'express-validator';
 import { authChecking } from '../../middleware/requireAuth';
 import { Project } from '../../models/Project';
@@ -29,6 +29,7 @@ router.post(
   async (
     req: Request<any, projectResBody, newProjectReqBody>,
     res: Response<projectResBody>,
+    next: NextFunction,
   ) => {
     const givenProjectName = req.body.projectName.trim();
     const givenUserObjectId = Types.ObjectId(req.user?.id)!;
@@ -38,17 +39,17 @@ router.post(
       projectName: givenProjectName,
     });
     if (project) {
-      console.log(project);
-      throw new BadRequestError('project name already exist', 400);
-    } else {
-      // create new project
-      const newProject = Project.build({
-        userId: givenUserObjectId, // checked req.user in authChecking middleware
-        projectName: givenProjectName,
-      });
-      await newProject.save();
-      res.status(200).send(newProject.toJSON());
+      next(new BadRequestError('project name already exist', 400));
+      return;
     }
+
+    // create new project
+    const newProject = Project.build({
+      userId: givenUserObjectId, // checked req.user in authChecking middleware
+      projectName: givenProjectName,
+    });
+    await newProject.save();
+    res.status(200).send(newProject.toJSON());
   },
 );
 

@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { body } from 'express-validator';
 import { authChecking } from '../../middleware/requireAuth';
 import { Project } from '../../models/Project';
@@ -32,6 +32,7 @@ router.patch(
   async (
     req: Request<any, projectResBody, patchProjectReqBody>,
     res: Response<projectResBody>,
+    next: NextFunction,
   ) => {
     const project = await Project.findOneAndUpdate(
       { _id: req.body.projectId, userId: Types.ObjectId(req.user?.id) },
@@ -41,11 +42,10 @@ router.patch(
       { new: true },
     );
     if (!project) {
-      console.log(project);
-      throw new BadRequestError(
-        'can not update the project that does not exist',
-        400,
+      next(
+        new BadRequestError('cannot update project that does not exist', 400),
       );
+      return;
     }
     res.status(200).send(project.toJSON());
   },

@@ -4,12 +4,14 @@ import '../passportStrategies/twitterStrategy';
 import '../passportStrategies/googleStrategy'; // importing google strategy
 
 let mongo: MongoMemoryServer;
+
 beforeAll(async () => {
   mongo = new MongoMemoryServer();
   const mongoUri = await mongo.getUri();
   await mongoose.connect(mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   });
 });
 
@@ -21,6 +23,6 @@ beforeEach(async () => {
 });
 
 afterAll(async () => {
+  await mongoose.disconnect();
   await mongo.stop();
-  await mongoose.connection.close();
 });
