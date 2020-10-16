@@ -29,7 +29,7 @@ interface todoResBody {
 const router = express.Router();
 
 router.patch(
-  '/api/todo/edit/important',
+  '/api/todo/edit/duedate',
   authChecking,
   [body('dueDate').notEmpty().withMessage('you should proivide date')],
   validateRequest,

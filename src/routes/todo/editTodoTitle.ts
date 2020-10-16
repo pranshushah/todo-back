@@ -32,7 +32,7 @@ router.patch(
   '/api/todo/edit/title',
   authChecking,
   [
-    body('todoTitle')
+    body('newTodoTitle')
       .trim()
       .notEmpty()
       .withMessage('newTodoTitle can not be empty'),

@@ -5,6 +5,9 @@ import { Types } from 'mongoose';
 import { validateProjectTodo } from '../../middleware/projectValidateTodo';
 import { stepsDocInterface } from '../../models/Steps';
 import { BadRequestError } from '../../errors/bad_request';
+import { body } from 'express-validator';
+import { validateRequest } from '../../middleware/requestValidation';
+
 interface ReqTodoBody {
   todoId: string;
   done: boolean;
@@ -29,6 +32,8 @@ const router = express.Router();
 router.patch(
   '/api/todo/edit/done',
   authChecking,
+  [body('done').isBoolean().withMessage('done should be boolean')],
+  validateRequest,
   validateProjectTodo,
   async (
     req: Request<any, todoResBody, ReqTodoBody>,
