@@ -29,9 +29,7 @@ router.delete(
       userId: givenUserObjectId,
     });
     if (!deletedProject) {
-      next(
-        new BadRequestError('cannot delete project that does not exist', 400),
-      );
+      next(new BadRequestError('project does not exist', 400));
       return;
     }
     res.status(200).send(deletedProject?.toJSON());

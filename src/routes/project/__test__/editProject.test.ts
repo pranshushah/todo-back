@@ -49,7 +49,5 @@ it('should throw error if project you are trying to update does not exist', asyn
       projectId: '5f85b6d0bd852754500bb5ca',
     })
     .set('Cookie', cookie);
-  expect(res.body.errors[0].message).toEqual(
-    'cannot update project that does not exist',
-  );
+  expect(res.body.errors[0].message).toEqual('project does not exist');
 });

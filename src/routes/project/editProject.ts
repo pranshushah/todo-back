@@ -42,9 +42,7 @@ router.patch(
       { new: true },
     );
     if (!project) {
-      next(
-        new BadRequestError('cannot update project that does not exist', 400),
-      );
+      next(new BadRequestError('project does not exist', 400));
       return;
     }
     res.status(200).send(project.toJSON());
