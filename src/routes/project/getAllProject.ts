@@ -3,7 +3,7 @@ import { authChecking } from '../../middleware/requireAuth';
 import { Project } from '../../models/Project';
 const router = express.Router();
 
-router.post(
+router.get(
   '/api/project/getall',
   authChecking,
   async (req: Request, res: Response, next: NextFunction) => {

@@ -5,7 +5,7 @@ import { Types } from 'mongoose';
 
 const router = express.Router();
 
-router.post(
+router.get(
   '/api/todo/getalltask',
   authChecking,
   async (req: Request, res: Response) => {

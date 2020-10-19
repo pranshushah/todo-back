@@ -34,7 +34,7 @@ it('should throw error beacause duedate not passed', async () => {
   const { cookie, todoBody } = await createTodo();
   const res = await request(app)
     .patch('/api/todo/edit/duedate')
-    .send({ todoId: todoBody.id, dueDate: new Date() })
+    .send({ todoId: todoBody.id })
     .set('Cookie', cookie);
-  expect(res.body.errors[0].message).toEqual('newTodoTitle can not be empty');
+  expect(res.body.errors[0].message).toEqual('you should proivide date');
 });

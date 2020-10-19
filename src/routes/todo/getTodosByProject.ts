@@ -8,7 +8,7 @@ interface ReqTodoBody {
 
 const router = express.Router();
 
-router.patch(
+router.get(
   '/api/todo/gettodosbyproject',
   authChecking,
   validateProjectTodo,
