@@ -43,7 +43,9 @@ router.post(
       const projectId = Types.ObjectId(req.body.projectId);
       const updatedProject = { ...req.body };
       delete updatedProject.projectId;
-      updatedProject.dueDate = new Date(updatedProject.dueDate as string);
+      if (updatedProject.dueDate) {
+        updatedProject.dueDate = new Date(updatedProject.dueDate as string);
+      }
       updatedProject.important = updatedProject.important
         ? updatedProject.important
         : false;
@@ -60,7 +62,9 @@ router.post(
       //adding todo Task
     } else {
       const updatedProject = { ...req.body };
-      updatedProject.dueDate = new Date(updatedProject.dueDate as string);
+      if (updatedProject.dueDate) {
+        updatedProject.dueDate = new Date(updatedProject.dueDate as string);
+      }
       updatedProject.important = updatedProject.important
         ? updatedProject.important
         : false;

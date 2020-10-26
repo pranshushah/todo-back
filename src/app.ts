@@ -14,6 +14,7 @@ import { editTodoMydayRoute } from './routes/todo/editTodoMyday';
 import { editStatusTitleRoute } from './routes/todo/editTodoStatus';
 import { getAllProjectRoute } from './routes/project/getAllProject';
 import { getAllTaskRoute } from './routes/todo/getAllTask';
+import { getAllDueDateRoute } from './routes/todo/getAllTaskWithDueDate';
 import { getTodosByProjectsRoute } from './routes/todo/getTodosByProject';
 import { addStepRoute } from './routes/todo/addStep';
 import { editStepDoneRoute } from './routes/todo/editStepDone';
@@ -53,6 +54,7 @@ app.use(addStepRoute);
 app.use(editStepDoneRoute);
 app.use(editStepTitleRoute);
 app.use(removeStepRoute);
+app.use(getAllDueDateRoute);
 app.all('*', () => {
   throw new BadRequestError('there is no such route', 404);
 });
