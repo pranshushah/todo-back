@@ -7,6 +7,8 @@ import { Types } from 'mongoose';
 import { validateProjectTodo } from '../../middleware/projectValidateTodo';
 interface ReqTodoBody {
   todoTitle: string;
+  dueDate?: string | Date;
+  important?: boolean;
   projectId?: string;
 }
 
@@ -39,18 +41,32 @@ router.post(
     if (req.body.projectId) {
       const userId = Types.ObjectId(req.user?.id);
       const projectId = Types.ObjectId(req.body.projectId);
+      const updatedProject = { ...req.body };
+      delete updatedProject.projectId;
+      updatedProject.dueDate = new Date(updatedProject.dueDate as string);
+      updatedProject.important = updatedProject.important
+        ? updatedProject.important
+        : false;
       const todo = Todo.build({
+        ...updatedProject,
         todoTitle: req.body.todoTitle.trim(),
         done: false,
         userId,
+        normalTask: false,
         projectId,
       });
       await todo.save();
       res.status(200).send(todo.toJSON());
       //adding todo Task
     } else {
+      const updatedProject = { ...req.body };
+      updatedProject.dueDate = new Date(updatedProject.dueDate as string);
+      updatedProject.important = updatedProject.important
+        ? updatedProject.important
+        : false;
       const userId = Types.ObjectId(req.user?.id);
       const todo = Todo.build({
+        ...updatedProject,
         todoTitle: req.body.todoTitle.trim(),
         done: false,
         userId,

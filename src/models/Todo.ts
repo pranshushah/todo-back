@@ -4,11 +4,12 @@ interface todoAttr {
   userId: Types.ObjectId;
   todoTitle: string;
   done: boolean;
-  normalTask?: boolean;
-  projectId?: Types.ObjectId;
-  dueDate?: Date;
+  normalTask: boolean;
+  projectId?: Types.ObjectId | string;
+  dueDate?: Date | string;
   important?: boolean;
   myDay?: boolean;
+  createdAt?: Date;
   steps?: stepsDocInterface[];
 }
 // this will be type of document when create with new Todo();
@@ -66,6 +67,10 @@ const todoSchema = new Schema(
         ret.id = ret._id;
         delete ret._id;
       },
+    },
+    //add created at
+    timestamps: {
+      createdAt: 'createdAt',
     },
   },
 );
