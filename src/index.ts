@@ -10,11 +10,17 @@ import { app } from './app';
       useUnifiedTopology: true,
       useFindAndModify: false,
     });
-    console.log('connected to auth database');
+    if (process.env.dev) {
+      process.stdout.write('connected to auth database');
+    }
   } catch (err) {
-    console.error(err);
+    if (process.env.dev) {
+      process.stdout.write(err);
+    }
   }
   app.listen(4000, () => {
-    console.log('backend server started on port 4000');
+    if (process.env.dev) {
+      process.stdout.write('backend server started on port 4000');
+    }
   });
 })();

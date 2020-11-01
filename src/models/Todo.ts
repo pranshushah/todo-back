@@ -75,11 +75,6 @@ const todoSchema = new Schema(
   },
 );
 
-// this created because we can type check with new Todo({});
-todoSchema.statics.build = function (todo: todoAttr) {
-  return new Todo(todo);
-};
-
 todoSchema.pre('validate', function (next) {
   if (this.get('projectId') || this.get('normalTask')) {
     next();
@@ -93,4 +88,10 @@ todoSchema.pre('validate', function (next) {
 });
 
 const Todo = model<todoDocInterface, todoModel>('Todo', todoSchema);
+
+// this created because we can type check with new Todo({});
+todoSchema.statics.build = function (todo: todoAttr) {
+  return new Todo(todo);
+};
+
 export { Todo };

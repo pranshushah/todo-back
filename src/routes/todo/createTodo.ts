@@ -38,37 +38,24 @@ router.post(
     res: Response<todoResBody>,
   ) => {
     // adding todo in related project
-    if (req.body.projectId) {
-      const userId = Types.ObjectId(req.user?.id);
-      const projectId = Types.ObjectId(req.body.projectId);
-      const updatedProject = { ...req.body };
-      delete updatedProject.projectId;
-      if (updatedProject.dueDate) {
-        updatedProject.dueDate = new Date(updatedProject.dueDate as string);
-      }
-      updatedProject.important = updatedProject.important
-        ? updatedProject.important
-        : false;
+    const userId = Types.ObjectId(req.user?.id);
+    const updatedProject = { ...req.body };
+    updatedProject.important = updatedProject.important
+      ? updatedProject.important
+      : false;
+    if (updatedProject.dueDate) {
+      updatedProject.dueDate = new Date(updatedProject.dueDate as string);
       const todo = Todo.build({
         ...updatedProject,
         todoTitle: req.body.todoTitle.trim(),
         done: false,
         userId,
         normalTask: false,
-        projectId,
       });
       await todo.save();
       res.status(200).send(todo.toJSON());
       //adding todo Task
     } else {
-      const updatedProject = { ...req.body };
-      if (updatedProject.dueDate) {
-        updatedProject.dueDate = new Date(updatedProject.dueDate as string);
-      }
-      updatedProject.important = updatedProject.important
-        ? updatedProject.important
-        : false;
-      const userId = Types.ObjectId(req.user?.id);
       const todo = Todo.build({
         ...updatedProject,
         todoTitle: req.body.todoTitle.trim(),

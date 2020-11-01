@@ -42,10 +42,11 @@ const stepsSchema = new Schema(
   },
 );
 
+const Step = model<stepsDocInterface, stepsModel>('Steps', stepsSchema);
+
 // this created because we can type check with new Step({});
 stepsSchema.statics.build = function (step: stepsAttr) {
   return new Step(step);
 };
 
-const Step = model<stepsDocInterface, stepsModel>('Steps', stepsSchema);
 export { Step, stepsAttr, stepsSchema };

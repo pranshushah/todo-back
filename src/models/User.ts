@@ -66,10 +66,11 @@ userSchema.pre('validate', function (next) {
   }
 });
 
+const User = model<userDocInterface, userModal>('User', userSchema);
+
 // this created because we can type check with new User({});
 userSchema.statics.build = function (user: userAttr) {
   return new User(user);
 };
 
-const User = model<userDocInterface, userModal>('User', userSchema);
 export { User };
