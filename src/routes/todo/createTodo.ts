@@ -50,7 +50,7 @@ router.post(
         todoTitle: req.body.todoTitle.trim(),
         done: false,
         userId,
-        normalTask: false,
+        normalTask: updatedProject.projectId ? false : true,
       });
       await todo.save();
       res.status(200).send(todo.toJSON());
@@ -61,7 +61,7 @@ router.post(
         todoTitle: req.body.todoTitle.trim(),
         done: false,
         userId,
-        normalTask: true,
+        normalTask: updatedProject.projectId ? false : true,
       });
       await todo.save();
       res.status(200).send(todo.toJSON());

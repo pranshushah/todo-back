@@ -42,14 +42,14 @@ const projectSchema = new Schema(
   },
 );
 
-const Project = model<projectDocInterface, projectModal>(
-  'Project',
-  projectSchema,
-);
-
 // this created because we can type check with new Project({});
 projectSchema.statics.build = function (project: projectAttr) {
   return new Project(project);
 };
+
+const Project = model<projectDocInterface, projectModal>(
+  'Project',
+  projectSchema,
+);
 
 export { Project };
