@@ -6,17 +6,17 @@ import { Types } from 'mongoose';
 const router = express.Router();
 
 router.get(
-  '/api/todo/getalltask',
+  '/api/project/getalltask',
   authChecking,
   async (req: Request, res: Response) => {
     // adding todo in related project
     const userId = Types.ObjectId(req.user?.id);
     const todos = await Todo.find({
       userId,
-      normalTask: true,
+      normalTask: false,
     });
     res.status(200).send(todos);
   },
 );
 
-export { router as getAllTaskRoute };
+export { router as getAllTaskInProjectRoute };

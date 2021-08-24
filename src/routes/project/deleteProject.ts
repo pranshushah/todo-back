@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { authChecking } from '../../middleware/requireAuth';
 import { Project } from '../../models/Project';
+import { Todo } from '../../models/Todo';
 import { BadRequestError } from '../../errors/bad_request';
 import { Types } from 'mongoose';
 interface deleteProjectReqBody {
@@ -27,6 +28,9 @@ router.delete(
     const deletedProject = await Project.findOneAndDelete({
       _id: req.body.projectId,
       userId: givenUserObjectId,
+    });
+    await Todo.deleteMany({
+      projectId: req.body.projectId,
     });
     if (!deletedProject) {
       next(new BadRequestError('project does not exist', 400));

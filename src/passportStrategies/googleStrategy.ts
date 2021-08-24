@@ -1,4 +1,3 @@
-import { googleClientId, googleClientSecret } from '../config/keys';
 import { User, userDocInterface } from '../models/User';
 import GooglePassport from 'passport-google-oauth20';
 import passport from 'passport';
@@ -58,8 +57,8 @@ function envStrategy() {
   } else {
     strategy = new GoogleStrategy(
       {
-        clientID: googleClientId,
-        clientSecret: googleClientSecret,
+        clientID: process.env.googleClientId!,
+        clientSecret: process.env.googleClientSecret!,
         callbackURL: '/api/auth/google/callback',
       },
       googleDetailsCallback,

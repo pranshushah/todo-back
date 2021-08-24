@@ -2,3 +2,4 @@ node_modules
 keys.ts
 keys.js
 build
+.env

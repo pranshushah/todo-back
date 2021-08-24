@@ -1,4 +1,3 @@
-import { twitterSecret, twitterAppId } from '../config/keys';
 import { User } from '../models/User';
 import TwitterPassport from 'passport-twitter';
 import passport from 'passport';
@@ -58,8 +57,8 @@ function envStrategy() {
   } else {
     strategy = new TwitterStrategy(
       {
-        consumerKey: twitterAppId,
-        consumerSecret: twitterSecret,
+        consumerKey: process.env.twitterPublic!,
+        consumerSecret: process.env.twitterSecret!,
         includeEmail: true,
         callbackURL: '/api/auth/twitter/callback',
       },

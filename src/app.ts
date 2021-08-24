@@ -18,11 +18,13 @@ import { getAllDueDateRoute } from './routes/todo/getAllTaskWithDueDate';
 import { getAllImpRoute } from './routes/todo/getAllImpTasks';
 import { getAllMyDayRoute } from './routes/todo/getAllMyDay';
 import { getTodosByProjectsRoute } from './routes/todo/getTodosByProject';
+import { getAllTaskInProjectRoute } from './routes/project/getAllTaskInproject';
 import { addStepRoute } from './routes/todo/addStep';
 import { editStepDoneRoute } from './routes/todo/editStepDone';
 import { editStepTitleRoute } from './routes/todo/editStepTitle';
 import { removeStepRoute } from './routes/todo/removeStep';
-import { cookieKey } from './config/keys';
+import { removeTodo } from './routes/todo/removeTodo';
+import { deleteTodoDueDateRoute } from './routes/todo/removeDueDate';
 import { BadRequestError } from './errors/bad_request';
 import { errorHandler } from './middleware/errorHandler';
 import { currentUser_logout } from './routes/auth/currentUser_logout';
@@ -31,10 +33,9 @@ app.use(express.json());
 app.use(
   cookieSession({
     maxAge: 300 * 24 * 60 * 60 * 1000,
-    keys: [cookieKey],
+    keys: [process.env.cookieKey!],
   }),
 );
-
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(googleLogin);
@@ -56,9 +57,12 @@ app.use(addStepRoute);
 app.use(editStepDoneRoute);
 app.use(editStepTitleRoute);
 app.use(removeStepRoute);
+app.use(deleteTodoDueDateRoute);
+app.use(removeTodo);
 app.use(getAllDueDateRoute);
 app.use(getAllImpRoute);
 app.use(getAllMyDayRoute);
+app.use(getAllTaskInProjectRoute);
 app.all('*', () => {
   throw new BadRequestError('there is no such route', 404);
 });

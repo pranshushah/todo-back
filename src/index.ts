@@ -1,26 +1,27 @@
 import { connect } from 'mongoose';
-import { mongoURI } from './config/keys';
 import './passportStrategies/googleStrategy'; // importing google strategy
 import './passportStrategies/twitterStrategy';
 import { app } from './app';
-(async function startDbAndServer() {
+
+async function startDbAndServer() {
   try {
-    await connect(mongoURI, {
+    await connect(process.env.mongoURI!, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
     });
-    if (process.env.dev) {
-      process.stdout.write('connected to auth database');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('connected to auth database');
     }
   } catch (err) {
-    if (process.env.dev) {
-      process.stdout.write(err);
+    if (process.env.NODE_ENV === 'development') {
+      console.error(err);
     }
   }
-  app.listen(4000, () => {
-    if (process.env.dev) {
-      process.stdout.write('backend server started on port 4000');
+  app.listen(process.env.PORT || 4000, () => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('backend server started on port 4000');
     }
   });
-})();
+}
+startDbAndServer();
