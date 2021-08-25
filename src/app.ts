@@ -25,9 +25,10 @@ import { editStepTitleRoute } from './routes/todo/editStepTitle';
 import { removeStepRoute } from './routes/todo/removeStep';
 import { removeTodo } from './routes/todo/removeTodo';
 import { deleteTodoDueDateRoute } from './routes/todo/removeDueDate';
-import { BadRequestError } from './errors/bad_request';
 import { errorHandler } from './middleware/errorHandler';
 import { currentUser_logout } from './routes/auth/currentUser_logout';
+const path = require('path');
+
 const app = express();
 app.use(express.json());
 app.use(
@@ -63,8 +64,10 @@ app.use(getAllDueDateRoute);
 app.use(getAllImpRoute);
 app.use(getAllMyDayRoute);
 app.use(getAllTaskInProjectRoute);
-app.all('*', () => {
-  throw new BadRequestError('there is no such route', 404);
-});
+console.log(path.join(__dirname));
+// app.use(express.static(path.join(__dirname, 'build')));
+// app.get('/*', function (req, res) {
+//   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+// });
 app.use(errorHandler);
 export { app };
