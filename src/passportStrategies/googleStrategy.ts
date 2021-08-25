@@ -60,6 +60,7 @@ function envStrategy() {
         clientID: process.env.googleClientId!,
         clientSecret: process.env.googleClientSecret!,
         callbackURL: '/api/auth/google/callback',
+        proxy: true,
       },
       googleDetailsCallback,
     );
