@@ -33,9 +33,11 @@
     ]
   },
   "scripts": {
-    "start:build": "tsc -w",
-    "start:run": "nodemon  -r dotenv/config build/index.js",
-    "start": "concurrently yarn:start:*",
+    "dev:build": "tsc -w",
+    "dev:run": "nodemon  -r dotenv/config build/index.js",
+    "dev": "concurrently yarn:dev:*",
+    "postinstall": "tsc",
+    "start": "node build/index.js",
     "test": "jest --runInBand --detectOpenHandles  --watchAll"
   },
   "devDependencies": {
