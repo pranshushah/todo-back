@@ -18,8 +18,10 @@ router.get(
 router.get(
   '/api/auth/google/callback',
   passport.authenticate('google', {
-    failureRedirect: 'http://localhost:3000',
-    successRedirect: 'http://localhost:3000/',
+    failureRedirect:
+      process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '/',
+    successRedirect:
+      process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '/',
   }),
 );
 
